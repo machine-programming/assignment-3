@@ -580,7 +580,7 @@ Create a PDF report showcasing your work!
    - Chat room: Screenshots showing message sending/receiving
    - Creative project: Screenshots demonstrating key features
 
-2. **Brief descriptions** (1-2 paragraphs each):
+2. **Brief descriptions**:
    - What you asked the agent to build
    - What worked well
    - What challenges came up
