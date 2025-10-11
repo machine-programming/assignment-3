@@ -615,4 +615,9 @@ Document any extra credit attempts in `extra_credit.md`.
 
 # 🎯 Summary and Submission
 
+We have prepared a shell script `package_submission.sh` for you to package your submission.
+Running it will produce a `submission.zip` file in the directory.
+Please modify the script to include all other files (e.g., `report.pdf`, `extra_credit.md`, `acknowledgements.md`, etc.) in the resulting `.zip` file.
+After that, you can submit the zip file to GradeScope under Assignment 3.
+
 Congratulations on building a complete LLM-powered coding agent! 🎉
