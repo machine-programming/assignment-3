@@ -409,6 +409,9 @@ Please reset the folder structure to its original form (esp. deleting the `.waa/
 ## 3.1. Personal Website
 
 Time to build your personal website! Your agent will create a professional-looking site from scratch.
+Here is one sample screenshot from one of WAA's attempt:
+
+![personal_website_screenshot](docs/personal_website_screenshot.png)
 
 ### Setup
 
@@ -459,6 +462,8 @@ which will start a server which you can visit! You can visit `https://localhost:
 ## 3.2. Chat Room
 
 Next, you'll build an interactive chat room with both frontend and backend!
+
+![chat_room_screenshot](docs/chat_room_screenshot.png)
 
 ### Setup
 
