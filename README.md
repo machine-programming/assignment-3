@@ -45,8 +45,8 @@ You will implement the following:
   - Completion of the chat room (15%)
   - Creativity and completeness of your own web app (20%)
 
-For Gradescope submission, zip the entire `waa/` directory and `targets/` directory.
-Include other files like `report.pdf` as well as `acknowledgement.md`.
+For Gradescope submission, zip the entire `waa/` directory and `targets/` directory using a script `package_submission.sh` (if you are running on Unix).
+Once you have the related files available (e.g., `report.pdf`, `acknowledgement.md`, `extra_credits.md`, etc.), directly modify the `package_submission.sh` script to include them in the output zip.
 
 ### 🤝 Collaboration Policy
 
