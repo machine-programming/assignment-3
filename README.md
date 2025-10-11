@@ -423,9 +423,7 @@ Time to build your personal website! Your agent will create a professional-looki
    - Specify the visual theme: dark/light, colors, animations
    - Ask for CSS effects, animations, and hover effects
 
-3. **Important**: Don't modify the test-related parts of the instruction! The UI tests expect:
-   - Main file named `index.html`
-   - Specific elements for testing (the instruction tells you which ones)
+3. **Important**: Don't modify the test-related parts of the instruction! The UI tests expect a main file named `index.html`.
 
 4. **Back up your work**: Before running, copy the directory somewhere safe so that they can be later recovered:
    ```bash
@@ -439,14 +437,6 @@ Now for the exciting part! Let your agent build your website:
 ```bash
 waa --working-dir targets/personal_website --debug
 ```
-
-Watch as your agent:
-1. Initializes npm and testing frameworks
-2. Creates `index.html`, `style.css`, `script.js`
-3. Runs the server
-4. Runs UI tests
-5. Fixes any failures
-6. Terminates when all tests pass
 
 ### Monitoring Progress
 
@@ -523,16 +513,6 @@ Read both test files carefully! They tell you exactly what your chat room should
 waa --working-dir targets/chat_room --debug
 ```
 
-Your agent will:
-1. Set up npm with Express
-2. Initialize API tests (Supertest) and UI tests (Playwright)
-3. Create the backend server
-4. Create the frontend interface
-5. Run API tests
-6. Run UI tests
-7. Fix failures and iterate
-8. Terminate when everything passes
-
 This is more complex than the personal website, so expect it to take more turns!
 
 ## 3.3. Your Own Creative Website
@@ -542,8 +522,8 @@ Now it's your turn to be creative! Build anything you want using your agent.
 ### Ideas
 
 Here are some possibilities:
-- **Calendar/Scheduling App**: Create events, view by day/week/month
-- **Polling Website**: Create polls, vote, see results in real-time
+- **Calendar and scheduling**: Create events, view by day/week/month
+- **Polling sebsite**: Create polls, vote, see results in real-time
 - **Social features** (forum, Q&A platform, social feed)
 - **Productivity tools** (project tracker, kanban board, time tracker)
 - **Interactive games** (The Snake Game, Pong, or anything that is interactive)
@@ -589,19 +569,6 @@ The more specific you are, the better your agent will perform.
 waa --working-dir targets/YOUR_PROJECT_NAME --debug
 ```
 
-### Evaluation Criteria
-
-We'll grade your creative project on:
-- **Completeness**: Does it work? Are core features implemented?
-- **Creativity**: Is it interesting? Did you try something unique?
-- **Quality**: Is the code reasonably clean? Does the UI look decent?
-- **Ambition**: Did you challenge yourself?
-
-Don't worry if it's not perfect! We want to see that you:
-- Understood how to instruct an agent
-- Let the agent do the work (don't code it yourself!)
-- Produced something functional
-
 ## 3.4. Report
 
 Create a PDF report showcasing your work!
@@ -619,11 +586,6 @@ Create a PDF report showcasing your work!
    - What challenges came up
    - How many turns it took
    - Any interesting observations
-
-3. **Agent logs** (optional but encouraged):
-   - Interesting snippets from agent.log
-   - Example tool calls
-   - How the agent debugged failures
 
 ### Creating the PDF
 
