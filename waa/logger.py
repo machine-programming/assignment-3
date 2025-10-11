@@ -5,9 +5,10 @@ import json
 
 
 class Logger:
-    def __init__(self, log_path: Path):
+    def __init__(self, log_path: Path, debug: bool = False):
         self.log_path = log_path
         self.log_path.parent.mkdir(parents=True, exist_ok=True)
+        self.debug = debug
 
         with open(self.log_path, 'w') as f:
             f.write(f"=== WAA Agent Log ===\n")
@@ -16,8 +17,11 @@ class Logger:
 
     def log(self, message: str, level: str = "INFO"):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        message = f"[{timestamp}] [{level}] {message}"
         with open(self.log_path, 'a') as f:
-            f.write(f"[{timestamp}] [{level}] {message}\n")
+            f.write(f"{message}\n")
+        if self.debug:
+            print(message)
 
     def log_system_prompt(self, prompt: str):
         self.log("=" * 80, "INFO")

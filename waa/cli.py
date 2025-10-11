@@ -10,6 +10,7 @@ def main():
         description="Web-App Agent - An LLM-powered agent for building web applications"
     )
     argparser.add_argument(
+        "-w",
         "--working-dir",
         type=str,
         default=".",

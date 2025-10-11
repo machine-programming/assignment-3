@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from pathlib import Path
 import json
 
@@ -59,7 +59,7 @@ class Agent:
         if log_path.exists():
             raise RuntimeError(f"Log file already exists: {log_path}. Remove it to start a new run.")
 
-        self.logger = Logger(log_path)
+        self.logger = Logger(log_path, self.debug)
         self.logger.log("Agent initialization started")
         self.logger.log(f"Working directory: {self.working_dir}")
         self.logger.log(f"Debug mode: {self.debug}")
