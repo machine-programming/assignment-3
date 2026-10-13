@@ -3,7 +3,7 @@ from typing import Dict, Any, List, Optional
 from pathlib import Path
 import json
 
-from .llm import LanguageModel, GeminiLanguageModel, MockLanguageModel
+from .llm import LanguageModel, BedrockLanguageModel, MockLanguageModel
 from .tool import ToolRegistry
 from .history import HistoryEntry, SystemPrompt, UserInstruction, LLMResponse, ToolCallResult
 from .logger import Logger
@@ -44,15 +44,15 @@ class Agent:
 
     def initialize_llm(self):
         llm_type = self.config.get("llm_type", "mock")
-        if llm_type == "gemini":
-            model_name = self.config.get("model", "gemini-2.0-flash-thinking-exp-01-21")
-            api_key = self.config.get("api_key", os.getenv("GEMINI_API_KEY"))
-            return GeminiLanguageModel(model_name=model_name, api_key=api_key)
+        if llm_type == "bedrock":
+            model_name = self.config.get("model", "us.anthropic.claude-sonnet-4-6")
+            api_key = self.config.get("api_key", os.getenv("AWS_BEARER_TOKEN_BEDROCK"))
+            return BedrockLanguageModel(model_name=model_name, api_key=api_key)
         elif llm_type == "mock":
             responses = self.config.get("mock_responses")
             return MockLanguageModel(responses=responses)
         else:
-            raise ValueError(f"Unknown llm_type: {llm_type}. Use 'gemini' or 'mock'.")
+            raise ValueError(f"Unknown llm_type: {llm_type}. Use 'bedrock' or 'mock'.")
 
     def initialize_logger(self):
         log_path = self.working_dir / ".waa" / "agent.log"
@@ -87,7 +87,7 @@ class Agent:
 
     def initialize(self):
         self.initialize_environment()
-        self.initialize_llm()
+        self.llm = self.initialize_llm()
         self.initialize_logger()
         self.initialize_tool_registry()
 

@@ -18,7 +18,7 @@ This assignment is divided into three parts that build on each other:
   Build essential tools for your agent: file system operations (read, write, edit) and TODO management. These are the "hands" of your agent.
 
 - **Part 3: Building Web Applications**
-  Use your completed agent to build three real web applications: a personal website, a chat room, and a creative project of your choice. Watch your agent work its magic! ✨
+  Use your completed agent to build a chat room, a Tetris variant of your own design (in three milestones), and a creative project of your choice. Watch your agent work its magic! ✨
 
 ### 📦 Deliverables and Submission
 
@@ -32,8 +32,8 @@ You will implement the following:
   - `waa/tools/todo.py`: TODO management tools (add, list, complete, remove)
 
 - **Part 3: Web Applications**
-  - `targets/personal_website/`: Your personal website
   - `targets/chat_room/`: An interactive chat room
+  - `targets/tetris/`: Your Tetris variant, including its `.waa/logs/`
   - `targets/YOUR_CREATIVE_IDEA/`: A web app of your own design
   - `report.pdf`: Screenshots and documentation of your web apps
 
@@ -41,8 +41,8 @@ You will implement the following:
 
 - **Parts 1 & 2 (50%)**: Autograded. Full credit if you pass all tests.
 - **Part 3 (50%)**: Manually graded by the instructor and TA based on:
-  - Completion of the personal website (15%)
-  - Completion of the chat room (15%)
+  - Completion of the chat room (10%)
+  - Completion of your Tetris variant across all three milestones (20%)
   - Creativity and completeness of your own web app (20%)
 
 For Gradescope submission, zip the entire `waa/` directory and `targets/` directory using a script `package_submission.sh` (if you are running on Unix).
@@ -65,20 +65,20 @@ Document interesting prompts and AI assistance in your `acknowledgements.md`.
 
 ### 🔑 LLM API Key
 
-For Part 3, we will provide each of you with a Google Gemini API key.
+For Part 3, we will provide the first set of Amazon Bedrock API keys. For subsequent keys, use your own Bedrock account and follow the [AWS setup tutorial](https://machine-programming.github.io/tutorials/aws/tutorial.pdf).
 This key is intended for use only within the context of this course.
 Please do not share it with others, especially outside of the class.
 
 To use your key, set it as an environment variable:
 
 ```bash
-export GEMINI_API_KEY="your_api_key_here"
+export AWS_BEARER_TOKEN_BEDROCK="your_api_key_here"
 ```
 
 Typical usage for this assignment should not exceed $20.
 We will monitor usage, and in cases of excessive or inappropriate use, keys may be revoked.
 
-> ⚠️ Note: If you accidentally publish your API key to GitHub publicly, automated scripts will detect and revoke it. Keep your key secret!
+> If you accidentally publish your API key, contact the course staff to have it revoked and replaced.
 
 ### 🧭 Integrity Guidelines
 
@@ -212,7 +212,7 @@ your-project/
 └── ...                   # Other files created by agent
 ```
 
-Check out `targets/personal_website/.waa/instruction.md` for an example!
+Check out `targets/tetris/.waa/instruction.md` for an example!
 
 Your task for this is to load the instruction file from `.waa/instruction.md` and append  a `UserInstruction` history entry (see `waa/history.py`) to `self.history`.
 
@@ -346,7 +346,7 @@ python tests/test_todo_mock_agent.py
 
 # 🌐 Part 3: Building Web Applications
 
-This is where the magic happens! You'll use your completed WAA agent to build three real web applications.
+This is where the magic happens! You'll use your completed WAA agent to build a chat room, a Tetris game of your own design, and a creative web app of your choice.
 Before proceeding, make sure that all tests pass for Part 1 and Part 2!
 
 ## 3.0. Understanding WAA Usage
@@ -359,7 +359,7 @@ waa --working-dir YOUR_WORKING_DIRECTORY
 
 Or from within a working directory:
 ```bash
-cd targets/personal_website
+cd targets/tetris
 waa
 ```
 
@@ -367,7 +367,7 @@ waa
 
 Watch your agent think in real-time:
 ```bash
-waa --working-dir targets/personal_website --debug
+waa --working-dir targets/tetris --debug
 ```
 
 This prints all LLM responses and tool calls to your terminal. It's incredibly helpful for understanding what your agent is doing!
@@ -406,62 +406,9 @@ In general, we would like to observe a single run of agent without interference.
 Therefore we have disallowed agent to proceed when the file `.waa/agent.log` is present.
 Please reset the folder structure to its original form (esp. deleting the `.waa/agent.log`) and try again.
 
-## 3.1. Personal Website
+## 3.1. Chat Room
 
-Time to build your personal website! Your agent will create a professional-looking site from scratch.
-Here is one sample screenshot from one of WAA's attempt:
-
-![personal_website_screenshot](docs/personal_website_screenshot.png)
-
-### Setup
-
-1. **Navigate to the personal website directory**:
-   ```bash
-   cd targets/personal_website
-   ```
-
-2. **Customize the instruction** at `targets/personal_website/.waa/instruction.md`:
-   - Replace "John" with your own information (or a fictional character)
-   - Describe yourself: interests, skills, projects, hobbies
-   - Specify the visual theme: dark/light, colors, animations
-   - Ask for CSS effects, animations, and hover effects
-
-3. **Important**: Don't modify the test-related parts of the instruction! The UI tests expect a main file named `index.html`.
-
-4. **Back up your work**: Before running, copy the directory somewhere safe so that they can be later recovered:
-   ```bash
-   cp -r targets/personal_website targets/personal_website_backup
-   ```
-
-### Running Your Agent
-
-Now for the exciting part! Let your agent build your website:
-
-```bash
-waa --working-dir targets/personal_website --debug
-```
-
-### Monitoring Progress
-
-While WAA runs, you can:
-- Watch the terminal output (in debug mode)
-- Check `targets/personal_website/.waa/agent.log` for detailed logs
-- View the generated files as they're created
-- Visit `http://localhost:3000` in your browser to see the site (once the server starts)
-
-### Checking the Result
-
-Go to your working directory `targets/personal_website` and do
-
-``` bash
-npm run start:sync
-```
-
-which will start a server which you can visit! You can visit `https://localhost:3000` in your browser so see your web app working!
-
-## 3.2. Chat Room
-
-Next, you'll build an interactive chat room with both frontend and backend!
+First, you'll build an interactive chat room with both frontend and backend!
 
 ![chat_room_screenshot](docs/chat_room_screenshot.png)
 
@@ -518,9 +465,143 @@ Read both test files carefully! They tell you exactly what your chat room should
 waa --working-dir targets/chat_room --debug
 ```
 
-This is more complex than the personal website, so expect it to take more turns!
+This has both a frontend and a backend, so expect it to take a good number of turns!
 
-## 3.3. Your Own Creative Website
+## 3.2. Design Your Own Tetris
+
+Time to make a game! You'll design the rules of your own Tetris variant and let your agent build it in three milestones: core mechanics, rules and scoring, and a leaderboard. Your project lives in `targets/tetris/`, which starts with Milestone 1 only.
+
+### What Counts as a Tetris?
+
+The provided **What Counts as a Tetris** sections in `targets/tetris/.waa/instruction.md` list the rules every game must follow. Rules 8–11 arrive with Milestone 2. In short, your game needs:
+- A finite arena of cells
+- All seven tetrominoes, with one active piece at a time
+- Gravity that speeds up over time
+- Moving, rotating, collision, and settling
+- Line clears, with scoring that rewards clearing several lines at once
+- Game over when a new piece can't enter
+- Start, pause, and restart
+
+Everything else is up to you! The only catch: your game must differ from classic Tetris in at least one of **arena shape, entry point, gravity direction, what a line is, or what happens after a clear**. A new theme or scoring table isn't enough.
+
+### Some Ideas
+
+![Classic Tetris](docs/tetris_ideas/classic.gif)
+
+**Classic** (the baseline, which you can't submit). Pieces enter at the top of a 10×20 board and fall down. Full rows clear.
+
+![Center Tetris](docs/tetris_ideas/center.gif)
+
+**Center.** Pieces start in the middle of a 20×20 board, and each falls in a random direction (up, down, left, or right). Full half-rows and half-columns clear, and nothing shifts.
+
+![Round Tetris](docs/tetris_ideas/round.gif)
+
+**Round.** Pieces enter at the outer edge of a ring and fall inward toward the hub. Full rings clear, and the outer rings move in.
+
+![Side Tetris](docs/tetris_ideas/side.gif)
+
+**Side.** Pieces enter from the left or right edge and slide toward a wall in the middle. Full columns on either side clear, and the outer columns move in.
+
+You can build one of these (Center, Round, or Side) or invent your own!
+
+### Setup
+
+1. **Read the provided sections** of `targets/tetris/.waa/instruction.md`: What Counts as a Tetris and Common Interface.
+2. **Fill in the three student sections** at the top:
+   - **Current Milestone**: the milestone the agent should work on now
+   - **My Variant**: your game's rules. That means the arena shape and size, where pieces enter, which way they fall, what a line is, what happens after a clear, the randomizer, controls, scoring, and speed.
+   - **Look and Feel**: colors, theme, layout, and effects
+3. **Important**: Don't modify the provided sections, the provided tests, or `jest.config.js`!
+
+Be precise in **My Variant**! Wherever you leave a gap, the agent fills it with its own choice.
+
+### Understanding the Tests
+
+Every game exposes the same small JavaScript interface, `window.__tetris`, described in the **Common Interface** sections. That's how one set of tests can check any variant, whatever its board looks like. Through it, tests start a game with a fixed seed, read the state, and move pieces themselves. Opening the page with `?test=1` turns off automatic gravity, so the tests control every step.
+
+You and your agent see the same tests, and there are no hidden ones. They only check that your game is a working Tetris, not that it follows your own rules, so play it yourself too! You can also write your own tests in `tests/extra/` (Playwright files must be named `ui.test.js`).
+
+To run the tests yourself, start the game in one terminal:
+```bash
+cd targets/tetris
+node index.js
+```
+
+Then run the tests in another:
+```bash
+cd targets/tetris
+npx playwright test tests/m1_core/ui.test.js    # UI tests need the game running
+npx jest tests/m3_leaderboard/api.test.js       # API tests don't
+```
+
+### Releasing Milestones
+
+Milestones 2 and 3 wait in `milestones/tetris/`, where your agent can't see them. When you reach one, copy in its tests and add its instructions once, from the assignment root. After each milestone, move the agent's log into `.waa/logs/` and keep a copy of your instruction there too. WAA won't start while `.waa/agent.log` exists, and these files are part of your submission. Each milestone below shows the commands.
+
+**Back up your work** between milestones, outside `targets/` so the backup doesn't end up in your submission:
+```bash
+cp -r targets/tetris ../tetris_backup_m1
+```
+
+## 3.3. Milestone 1: Core Mechanics
+
+**Goal:** Rules 1–7. Your arena, all seven pieces, entry, gravity, moving and rotating, soft and hard drop, collision, settling, and the next-piece preview.
+
+1. Set **Current Milestone** to "Milestone 1: Core Mechanics", describe your game in **My Variant** (including its controls), and write **Look and Feel**.
+2. Let your agent build it:
+   ```bash
+   waa --working-dir targets/tetris --debug
+   ```
+3. Run the M1 tests and play the game.
+4. Save the log and your instruction:
+   ```bash
+   mkdir -p targets/tetris/.waa/logs
+   mv targets/tetris/.waa/agent.log targets/tetris/.waa/logs/m1.log
+   cp targets/tetris/.waa/instruction.md targets/tetris/.waa/logs/m1.instruction.md
+   ```
+
+**Done when** the M1 tests pass and the game plays the way your **My Variant** says.
+
+## 3.4. Milestone 2: Rules and Scoring
+
+**Goal:** Rules 8–11. Lines and clearing, scoring with a bonus for clearing several lines at once, speed that increases, game over, pause and restart, and the score display.
+
+1. Release Milestone 2:
+   ```bash
+   cp -r milestones/tetris/m2_rules/tests targets/tetris/tests/m2_rules
+   cat milestones/tetris/m2_rules/INTERFACE.md >> targets/tetris/.waa/instruction.md
+   ```
+2. Read the new sections at the end of `instruction.md` and the M2 tests. Set **Current Milestone** to "Milestone 2: Rules and Scoring", and add your rules for lines, clearing, scoring, levels, speed, and pausing to **My Variant**.
+3. Run your agent again with the same command. It helps to tell it what already works from M1!
+4. Run the M1 and M2 tests and play the game:
+   ```bash
+   npx playwright test tests/m1_core/ui.test.js tests/m2_rules/ui.test.js
+   ```
+5. Save the log and your instruction as in M1, using `m2` in the file names.
+
+**Done when** the M1 and M2 tests pass and the game follows all eleven rules and your **My Variant**.
+
+## 3.5. Milestone 3: Leaderboard
+
+**Goal:** A leaderboard! When the game ends, the player can submit a name with their score, lines, and level. The server keeps scores in memory, rejects invalid submissions, and the page shows the best scores without reloading.
+
+1. Release Milestone 3:
+   ```bash
+   cp -r milestones/tetris/m3_leaderboard/tests targets/tetris/tests/m3_leaderboard
+   cat milestones/tetris/m3_leaderboard/INTERFACE.md >> targets/tetris/.waa/instruction.md
+   ```
+2. Read the new sections and the M3 tests. Set **Current Milestone** to "Milestone 3: Leaderboard", and add any leaderboard choices (validation limits, ties, how many scores to show) to **My Variant**.
+3. Run your agent again.
+4. Run all the tests and play the game:
+   ```bash
+   npx playwright test tests/m1_core/ui.test.js tests/m2_rules/ui.test.js tests/m3_leaderboard/ui.test.js
+   npx jest tests/m3_leaderboard/api.test.js
+   ```
+5. Save the log and your instruction as in M1, using `m3` in the file names.
+
+**Done when** all the tests pass and the game follows the rules and your **My Variant**.
+
+## 3.6. Your Own Creative Website
 
 Now it's your turn to be creative! Build anything you want using your agent.
 
@@ -533,7 +614,7 @@ Here are some possibilities:
 - **Productivity tools** (project tracker, kanban board, time tracker)
 - **Interactive games** (The Snake Game, Pong, or anything that is interactive)
 
-Be ambitious! This is your chance to build something impressive.
+Be ambitious! This is your chance to build something impressive. It can even be another Tetris idea, as long as it's a separate project in its own folder.
 
 ### Setup
 
@@ -545,15 +626,15 @@ Be ambitious! This is your chance to build something impressive.
 
 2. **Copy config.json** from another project:
    ```bash
-   cp targets/personal_website/.waa/config.json targets/YOUR_PROJECT_NAME/.waa/
+   cp targets/tetris/.waa/config.json targets/YOUR_PROJECT_NAME/.waa/
    ```
 
 3. **Adjust max_turns** if your project is complex:
    ```json
    {
      "max_turns": 75,
-     "llm_type": "gemini",
-     "model": "gemini-2.5-pro"
+     "llm_type": "bedrock",
+     "model": "us.anthropic.claude-sonnet-4-6"
    }
    ```
 
@@ -574,19 +655,20 @@ The more specific you are, the better your agent will perform.
 waa --working-dir targets/YOUR_PROJECT_NAME --debug
 ```
 
-## 3.4. Report
+## 3.7. Report
 
 Create a PDF report showcasing your work!
 
 ### What to Include
 
-1. **Screenshots of each website**:
-   - Personal website: Full page screenshot
+1. **Screenshots (or GIFs) of each project**:
    - Chat room: Screenshots showing message sending/receiving
+   - Your Tetris variant: gameplay including a line clear, the game-over screen with the score form, and the leaderboard
    - Creative project: Screenshots demonstrating key features
 
 2. **Brief descriptions**:
-   - What you asked the agent to build
+   - What you asked the agent to build, including what your Tetris variant changes from classic
+   - How your **My Variant** text changed across the three milestones
    - What worked well
    - What challenges came up
    - How many turns it took

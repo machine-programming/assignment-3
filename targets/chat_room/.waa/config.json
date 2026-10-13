@@ -1,6 +1,6 @@
 {
-    "llm_type": "gemini",
-    "model": "gemini-2.5-pro",
+    "llm_type": "bedrock",
+    "model": "us.anthropic.claude-sonnet-4-6",
     "max_turns": 50,
     "protected_files": [
         ".waa/config.json",

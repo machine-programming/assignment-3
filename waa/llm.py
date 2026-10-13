@@ -9,54 +9,71 @@ class LanguageModel:
         raise NotImplementedError("Subclasses must implement this method")
 
 
-class GeminiLanguageModel(LanguageModel):
-    def __init__(self, model_name: str = "gemini-2.5-flash", api_key: str = None):
+class BedrockLanguageModel(LanguageModel):
+    def __init__(self, model_name: str = "us.anthropic.claude-sonnet-4-6", api_key: str = None):
         super().__init__()
         self.model_name = model_name
         self.temperature = 0.0
         self.max_tokens = 8000
-        self.top_p = 1.0
 
-        self.api_key = api_key or os.getenv("GEMINI_API_KEY")
+        self.api_key = api_key or os.getenv("AWS_BEARER_TOKEN_BEDROCK")
         if not self.api_key:
-            raise ValueError("GEMINI_API_KEY environment variable not set")
+            raise ValueError("AWS_BEARER_TOKEN_BEDROCK environment variable not set")
 
         try:
-            import google.generativeai as genai
-            genai.configure(api_key=self.api_key)
-            self.client = genai.GenerativeModel(
-                model_name=self.model_name,
-                generation_config={
-                    "temperature": self.temperature,
-                    "max_output_tokens": self.max_tokens,
-                    "top_p": self.top_p,
-                }
-            )
+            import boto3
+            from botocore.config import Config
         except ImportError:
-            raise ImportError("google-generativeai package not installed. Install with: pip install google-generativeai")
+            raise ImportError("boto3 package not installed. Install with: pip install boto3")
+        os.environ["AWS_BEARER_TOKEN_BEDROCK"] = self.api_key
+        self.client = boto3.client(
+            "bedrock-runtime", region_name="us-east-1", config=Config(read_timeout=300)
+        )
 
     def generate(self, messages: List[Dict[str, Any]]) -> str:
-        gemini_messages = []
+        system = []
+        bedrock_messages = []
         for msg in messages:
             role = msg.get("role")
             content = msg.get("content")
-
             if role == "system":
-                gemini_messages.append({"role": "user", "parts": [content]})
-            elif role == "user":
-                gemini_messages.append({"role": "user", "parts": [content]})
-            elif role == "assistant":
-                gemini_messages.append({"role": "model", "parts": [content]})
-            elif role == "tool":
-                tool_content = content if isinstance(content, str) else str(content)
-                gemini_messages.append({"role": "user", "parts": [f"Tool result: {tool_content}"]})
+                system.append({"text": content})
+                continue
+            if role == "tool":
+                role = "user"
+                content = f"Tool result: {content}"
+            if role not in ("user", "assistant"):
+                continue
+            block = {"text": content}
+            if bedrock_messages and bedrock_messages[-1]["role"] == role:
+                bedrock_messages[-1]["content"].append(block)
+            else:
+                bedrock_messages.append({"role": role, "content": [block]})
+
+        # Sonnet requires a user turn after a reasoning-only assistant response.
+        if bedrock_messages and bedrock_messages[-1]["role"] == "assistant":
+            bedrock_messages.append({"role": "user", "content": [{"text":
+                "Continue."
+            }]})
 
         try:
-            chat = self.client.start_chat(history=gemini_messages[:-1] if len(gemini_messages) > 1 else [])
-            response = chat.send_message(gemini_messages[-1]["parts"][0] if gemini_messages else "")
-            return response.text
+            request = {
+                "modelId": self.model_name,
+                "messages": bedrock_messages,
+                "inferenceConfig": {
+                    "temperature": self.temperature,
+                    "maxTokens": self.max_tokens,
+                },
+            }
+            if system:
+                request["system"] = system
+            response = self.client.converse(**request)
+            return "".join(
+                block["text"] for block in response["output"]["message"]["content"]
+                if "text" in block
+            )
         except Exception as e:
-            raise RuntimeError(f"Gemini API error: {str(e)}")
+            raise RuntimeError(f"Bedrock API error: {str(e)}")
 
 
 class MockLanguageModel(LanguageModel):
@@ -77,3 +94,17 @@ class MockLanguageModel(LanguageModel):
 
     def reset(self):
         self.call_count = 0
+
+
+def create_language_model(config: Dict[str, Any]) -> LanguageModel:
+    llm_type = config.get("llm_type", "mock")
+
+    if llm_type == "bedrock":
+        model_name = config.get("model", "us.anthropic.claude-sonnet-4-6")
+        api_key = config.get("api_key", os.getenv("AWS_BEARER_TOKEN_BEDROCK"))
+        return BedrockLanguageModel(model_name=model_name, api_key=api_key)
+    elif llm_type == "mock":
+        responses = config.get("mock_responses")
+        return MockLanguageModel(responses=responses)
+    else:
+        raise ValueError(f"Unknown llm_type: {llm_type}. Use 'bedrock' or 'mock'.")

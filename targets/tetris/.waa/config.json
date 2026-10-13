@@ -1,0 +1,18 @@
+{
+    "llm_type": "bedrock",
+    "model": "us.anthropic.claude-sonnet-4-6",
+    "max_turns": 100,
+    "playwright.timeout": 180,
+    "supertest.timeout": 120,
+    "protected_files": [
+        ".waa/config.json",
+        ".waa/instruction.md",
+        ".waa/agent.log",
+        ".waa/server.log",
+        "jest.config.js",
+        "tests/m1_core/ui.test.js",
+        "tests/m2_rules/ui.test.js",
+        "tests/m3_leaderboard/ui.test.js",
+        "tests/m3_leaderboard/api.test.js"
+    ]
+}
