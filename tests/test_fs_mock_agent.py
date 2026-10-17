@@ -481,34 +481,6 @@ class TestFSAgentDirectoryListing(TestFSAgentRunner):
         self.assertIn("file2.txt", entry_names)
         self.assertIn("subdir", entry_names)
 
-    def test_fs_tree_shows_tree(self):
-        """Test that fs_tree shows directory tree structure."""
-        config = {
-            "llm_type": "mock",
-            "max_turns": 10,
-            "allowed_tools": ["fs.write", "fs.mkdir", "fs.tree"],
-            "mock_responses": [
-                '<tool_call>{"tool": "fs.mkdir", "arguments": {"path": "dir1/subdir"}}</tool_call>',
-                '<tool_call>{"tool": "fs.write", "arguments": {"path": "dir1/file1.txt", "content": "content"}}</tool_call>',
-                '<tool_call>{"tool": "fs.write", "arguments": {"path": "dir1/subdir/file2.txt", "content": "content"}}</tool_call>',
-                '<tool_call>{"tool": "fs.tree", "arguments": {"path": ".", "max_depth": 3}}</tool_call>',
-                "<terminate>"
-            ]
-        }
-
-        temp_dir = self.create_temp_workspace(config, "Show directory tree")
-        agent = self.run_agent(temp_dir)
-
-        tree_results = [
-            entry for entry in agent.history
-            if isinstance(entry, ToolCallResult) and entry.tool_name == "fs.tree"
-        ]
-
-        self.assertEqual(len(tree_results), 1)
-        self.assertTrue(tree_results[0].result["ok"])
-        tree = tree_results[0].result["data"]["tree"]
-        self.assertIsInstance(tree, list)
-
 
 class TestFSAgentFullCycle(TestFSAgentRunner):
     """Tests for full file system lifecycle operations."""

@@ -28,7 +28,7 @@ You will implement the following:
   - `waa/agent.py`: Tool registry setup, system prompt, user instruction loading, LLM querying, tool execution, main loop
 
 - **Part 2: Tools**
-  - `waa/tools/fs.py`: File system tools (read, write, edit, delete, mkdir, rmdir, ls, tree)
+  - `waa/tools/fs.py`: File system tools (read, write, edit, delete, mkdir, rmdir, ls)
   - `waa/tools/todo.py`: TODO management tools (add, list, complete, remove)
 
 - **Part 3: Web Applications**
